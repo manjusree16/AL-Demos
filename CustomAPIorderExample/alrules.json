@@ -1,0 +1,7 @@
+{
+    "name":"Web Order Rules",
+    "description": "Code analysis rules for web order",
+    "rules":[
+
+            ]
+}

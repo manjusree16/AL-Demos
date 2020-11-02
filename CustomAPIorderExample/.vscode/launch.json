@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [ 
+        
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "mybc365wave1",
+            "server": "http://mybcwave1",
+            "serverInstance": "BC",
+            "authentication": "UserPassword",
+            "startupObjectId": 22,
+            "startupObjectType": "Page",
+            "breakOnError": true,
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+            "schemaUpdateMode": "ForceSync"
+        }
+    ]
+}

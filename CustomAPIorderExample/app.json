@@ -1,0 +1,19 @@
+{
+  "id": "70cb61ef-e720-4de6-911a-6e3eefda9f5a",
+  "name": "CustomAPIOrderExample",
+  "publisher": "Default publisher",
+  "brief": "Custom API-web order sample",
+  "description": "Custom API-web order sample",
+  "version": "1.0.0.0",
+  "url": "http://mybusinesscentraldiary.wordpress.com/",
+  "logo": "",
+  "dependencies": [],
+  "screenshots": [],
+  "application": "11.0.0.0",
+  "runtime": "5.2",
+  "idRange": {
+    "from": 50100,
+    "to": 50101
+
+  }
+}
