@@ -1,0 +1,321 @@
+
+//get companies
+GET {{baseurl}}/api/v2.0/companies?tenant=default
+Authorization: Basic {{username}}:{{password}}
+Content-Type: application/json
+#####
+#####entity definitions
+GET {{baseurl}}/api/Manjusree/app1/v2.0/entityDefinitions?tenant=default
+Authorization: Basic {{username}}:{{password}}
+Content-Type: application/json
+
+####get web orders with lines###
+GET {{baseurl}}/api/Manjusree/app1/v2.0/companies(8b195686-a167-eb11-bb5b-000d3a387bc6)/webOrders?$expand=webOrderLines&tenant=default
+Authorization: Basic {{username}}:{{password}}
+Content-Type: application/json
+####deep insert
+###create order header and lines in one go###deep insert
+POST {{baseurl}}/api/Manjusree/app1/v2.0/companies(8b195686-a167-eb11-bb5b-000d3a387bc6)/webOrders?$expand=webOrderLines&tenant=default
+Authorization: Basic {{username}}:{{password}}
+Content-Type: application/json
+
+{
+    "externalDocumentNumber": "ext005",
+    "orderDate": "2011-02-04",
+    "sellToCustomerNo": "10000",
+    "webOrderLines": [
+        {
+            "Type": "G/L Account",
+            "No": "1110",
+            "Quantity": 1,
+            "Unit_Price": 30,
+            "Amount": 30,
+            "Description": "test1"
+        },
+        {
+            "Type": "G/L Account",
+            "No": "1120",
+            "Quantity": 2,
+            "Unit_Price": 40,
+            "Amount": 80,
+            "Description": "test2"
+        }
+    ]
+}
+###edit header using PATCH###
+PATCH  {{baseurl}}/api/Manjusree/app1/v2.0/companies(8b195686-a167-eb11-bb5b-000d3a387bc6)/webOrders(18ac0f67-5c6c-eb11-8157-955618552f2f)?tenant=default
+Authorization: Basic {{username}}:{{password}}
+Content-Type: application/json
+If-Match: W/"JzQ0OzVNZ2c0MGlSVWg4N3hYSFJrckJJU3ZRVkY3azUrUmJ4TnhjN2JINzVzR289MTswMDsn"
+
+{
+    "externalDocumentNumber": "ext007"
+}
+###Deletes the order###
+DELETE {{baseurl}}/api/Manjusree/app1/v2.0/companies(8b195686-a167-eb11-bb5b-000d3a387bc6)/webOrders(18ac0f67-5c6c-eb11-8157-955618552f2f)?tenant=default
+Authorization: Basic {{username}}:{{password}}
+Content-Type: application/json
+If-Match:W/"JzQ0OzVNZ2c0MGlSVWg4N3hYSFJrckJJU3ZRVkY3azUrUmJ4TnhjN2JINzVzR289MTswMDsn"
+
+
+####Batch calls
+###create multiple orders in one go, returns full response 
+POST {{baseurl}}/api/Manjusree/app1/v2.0/$batch?tenant=default
+Authorization: Basic {{username}}:{{password}}
+Content-Type: application/json;IEEE754Compatible=true
+Accept: application/json
+Prefer: odata.continue-on-error
+OData-Isolation: snapshot
+
+{
+	"requests": [
+		{
+			"method": "POST",
+			"id": "req1",
+			"url": "companies(8b195686-a167-eb11-bb5b-000d3a387bc6)/webOrders?$expand=webOrderLines",
+			"headers": {
+				"Content-Type": "application/json"
+			},
+			"body": {
+                 "externalDocumentNumber": "ext012",
+                 "orderDate": "2021-01-01",
+                 "sellToCustomerNo": "10000",
+                 "webOrderLines": [
+                      {
+                       "Type": "G/L Account",
+                       "No": "1110",
+                       "Quantity": 1,
+                       "Unit_Price": 10,
+                       "Amount": 10,
+                       "Description": "test1"
+                      },
+                      {
+                       "Type": "G/L Account",
+                       "No": "1120",
+                       "Quantity": 2,
+                       "Unit_Price": 20,
+                       "Amount": 40,
+                       "Description": "test2"
+                      }
+                     ]
+			}
+		},
+		{
+			"method": "POST",
+			"id": "req2",
+			"url": "companies(8b195686-a167-eb11-bb5b-000d3a387bc6)/webOrders?$expand=webOrderLines",
+			"headers": {
+				"Content-Type": "application/json"
+			},
+			"body": {
+                 "externalDocumentNumber": "ext013",
+                 "orderDate": "2021-01-02",
+                 "sellToCustomerNo": "10000",
+                 "webOrderLines": [
+                      {
+                       "Type": "G/L Account",
+                       "No": "1110",
+                       "Quantity": 3,
+                       "Unit_Price": 30,
+                       "Amount": 90,
+                       "Description": "test1"
+                      },
+                      {
+                       "Type": "G/L Account",
+                       "No": "1120",
+                       "Quantity": 4,
+                       "Unit_Price": 20,
+                       "Amount": 80,
+                       "Description": "test2"
+                      }
+                     ]
+			}
+		},
+       		{
+			"method": "POST",
+			"id": "req3",
+			"url": "companies(8b195686-a167-eb11-bb5b-000d3a387bc6)/webOrders?$expand=webOrderLines",
+			"headers": {
+				"Content-Type": "application/json"
+			},
+			"body": {
+                 "externalDocumentNumber": "ext014",
+                 "orderDate": "2021-01-03",
+                 "sellToCustomerNo": "10000",
+                 "webOrderLines": [
+                      {
+                       "Type": "G/L Account",
+                       "No": "1110",
+                       "Quantity": 5,
+                       "Unit_Price": 50,
+                       "Amount": 250,
+                       "Description": "test012"
+                      },
+                      {
+                       "Type": "G/L Account",
+                       "No": "1120",
+                       "Quantity": 6,
+                       "Unit_Price": 20,
+                       "Amount": 120,
+                       "Description": "test0123"
+                      }
+                     ]
+			}
+		}
+	]
+}
+
+####Batch calls
+###create multiple orders in one go, returns only the order number in response  
+POST {{baseurl}}/api/Manjusree/app1/v2.0/$batch?tenant=default
+Authorization: Basic {{username}}:{{password}}
+Content-Type: application/json;IEEE754Compatible=true
+Accept: application/json
+Prefer: odata.continue-on-error
+OData-Isolation: snapshot
+
+{
+	"requests": [
+		{
+			"method": "POST",
+			"id": "req1",
+			"url": "companies(8b195686-a167-eb11-bb5b-000d3a387bc6)/webOrders?$select=number",
+			"headers": {
+				"Content-Type": "application/json"
+			},
+			"body": {
+                 "externalDocumentNumber": "ext025",
+                 "orderDate": "2021-01-01",
+                 "sellToCustomerNo": "10000",
+                 "webOrderLines": [
+                      {
+                       "Type": "G/L Account",
+                       "No": "1110",
+                       "Quantity": 1,
+                       "Unit_Price": 10,
+                       "Amount": 10,
+                       "Description": "test1"
+                      },
+                      {
+                       "Type": "G/L Account",
+                       "No": "1120",
+                       "Quantity": 2,
+                       "Unit_Price": 20,
+                       "Amount": 40,
+                       "Description": "test2"
+                      }
+                     ]
+			}
+		},
+		{
+			"method": "POST",
+			"id": "req2",
+			"url": "companies(8b195686-a167-eb11-bb5b-000d3a387bc6)/webOrders?$select=number",
+			"headers": {
+				"Content-Type": "application/json"
+			},
+			"body": {
+                 "externalDocumentNumber": "ext026",
+                 "orderDate": "2021-01-02",
+                 "sellToCustomerNo": "10000",
+                 "webOrderLines": [
+                      {
+                       "Type": "G/L Account",
+                       "No": "1110",
+                       "Quantity": 3,
+                       "Unit_Price": 30,
+                       "Amount": 90,
+                       "Description": "test1"
+                      },
+                      {
+                       "Type": "G/L Account",
+                       "No": "1120",
+                       "Quantity": 4,
+                       "Unit_Price": 20,
+                       "Amount": 80,
+                       "Description": "test2"
+                      }
+                     ]
+			}
+		}   		
+	]
+}
+
+
+####Batch calls
+###create multiple orders in one go, returns only status in response  
+POST {{baseurl}}/api/Manjusree/app1/v2.0/$batch?tenant=default
+Authorization: Basic {{username}}:{{password}}
+Content-Type: application/json;IEEE754Compatible=true
+Accept: application/json
+Prefer: odata.continue-on-error
+OData-Isolation: snapshot
+
+{
+	"requests": [
+		{
+			"method": "POST",
+			"id": "req1",
+			"url": "companies(8b195686-a167-eb11-bb5b-000d3a387bc6)/webOrders",
+			"headers": {
+				"Content-Type": "application/json",
+                "Prefer": "return-no-content"
+			},
+			"body": {
+                 "externalDocumentNumber": "ext035",
+                 "orderDate": "2021-01-01",
+                 "sellToCustomerNo": "10000",
+                 "webOrderLines": [
+                      {
+                       "Type": "G/L Account",
+                       "No": "1110",
+                       "Quantity": 1,
+                       "Unit_Price": 10.54,
+                       "Amount": 10.54,
+                       "Description": "test1"
+                      },
+                      {
+                       "Type": "G/L Account",
+                       "No": "1120",
+                       "Quantity": 2,
+                       "Unit_Price": 20,
+                       "Amount": 40,
+                       "Description": "test2"
+                      }
+                     ]
+			}
+		},
+		{
+			"method": "POST",
+			"id": "req2",
+			"url": "companies(8b195686-a167-eb11-bb5b-000d3a387bc6)/webOrders",
+			"headers": {
+				"Content-Type": "application/json",
+                "Prefer": "return-no-content"
+			},
+			"body": {
+                 "externalDocumentNumber": "ext036",
+                 "orderDate": "2021-01-02",
+                 "sellToCustomerNo": "10000",
+                 "webOrderLines": [
+                      {
+                       "Type": "G/L Account",
+                       "No": "1110",
+                       "Quantity": 3,
+                       "Unit_Price": 30,
+                       "Amount": 90,
+                       "Description": "test1"
+                      },
+                      {
+                       "Type": "G/L Account",
+                       "No": "1120",
+                       "Quantity": 4,
+                       "Unit_Price": 20,
+                       "Amount": 80,
+                       "Description": "test2"
+                      }
+                     ]
+			}
+		}   		
+	]
+}
