@@ -122,19 +122,12 @@ page 50100 "Item Images"
     local procedure ImportImages();
     var
         Item: Record Item;
-        //TempItemPictureBuffer: Record "Item Picture Buffer" temporary;
         TempItemMediaBuffer: Record "Config. Media Buffer" temporary;
         PicInStream: InStream;
         FromFileName: Text;
     begin
         if Item.get(Rec."Package Code") then begin
             if UploadIntoStream('Import', '', 'All Files (*.*)|*.*', FromFileName, PicInStream) then begin
-                /* TempItemPictureBuffer.Init();
-                 TempItemPictureBuffer."File Name" := FromFileName;
-                 TempItemPictureBuffer."Item No." := Item."No.";
-                 TempItemPictureBuffer.Picture.ImportStream(PicInStream, FromFileName);
-                 TempItemPictureBuffer.Insert();
-                 Item.Picture.Insert(TempItemPictureBuffer.Picture.MediaId);*/
                 TempItemMediaBuffer.DeleteAll();
                 TempItemMediaBuffer.Init();
                 TempItemMediaBuffer."No." := 1;
